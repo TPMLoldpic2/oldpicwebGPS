@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#1f1815">
+  <meta name="description" content="城西尋影：走進萬華街頭，解鎖舊日臺北的影像。">
+  <title>城西尋影｜萬華街區實境探索</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&family=Noto+Serif+TC:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzxRuIZVTEP0A0bY7/1CZqG7o=" crossorigin="">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="logo" href="#top" aria-label="回到城西尋影首頁"><span class="logo-mark">◈</span><span>城西尋影</span><small>LOST FRAMES</small></a>
+    <div class="top-actions">
+      <span class="edition">萬華街區實境探索</span>
+      <button id="helpButton" class="icon-button" aria-label="查看遊戲說明" title="遊戲說明">?</button>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero container">
+      <div class="eyebrow"><span class="line"></span> CITY MEMORY · LOCATION GAME <span class="line"></span></div>
+      <div class="hero-layout">
+        <div class="hero-copy">
+          <div class="overline">臺北老照片特展／城市影像尋訪計畫</div>
+          <h1>城西<span>尋影</span></h1>
+          <div class="hero-en">TRACING THE LOST FRAMES</div>
+          <p class="hero-lead">有些風景不曾離開。<br>只是藏進了時間裡。</p>
+          <p class="hero-intro">從文獻館出發，跟著地圖走進萬華與西門町。當你抵達一處歷史現場，便能解鎖一張舊日影像；有動態影片的地點，還能讓往日街景重新播放。</p>
+          <div class="hero-cta">
+            <button id="startButton" class="primary-button"><span class="button-icon">⌖</span> 開始尋影 <span>↗</span></button>
+            <button id="howButton" class="outline-button">玩法介紹 <span>↗</span></button>
+          </div>
+          <div class="hero-metrics"><span><b id="heroDone">00</b><small>已解鎖影像</small></span><span><b id="heroTotal">06</b><small>待尋找座標</small></span><span class="location-metric"><span class="status-dot"></span><small id="gpsHeader">尚未啟用定位</small></span></div>
+        </div>
+        <div class="hero-visual" aria-label="使用館藏照片製作的主視覺">
+          <div class="visual-orbit"></div>
+          <div class="visual-frame frame-back"><img src="images/ximen-redhouse.jpg" alt="1920 年代新起街市場老照片"></div>
+          <div class="visual-frame frame-front"><img src="images/new-world-cinema.jpg" alt="1950 年代新世界大戲院老照片"></div>
+          <div class="visual-stamp"><b>06</b><small>LOST<br>FRAMES</small></div>
+          <div class="visual-caption"><span>西門町・萬華</span><span>NOW / THEN</span></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="tape-divider" aria-hidden="true"><span>FRAME 01</span><span>✧</span><span>FRAME 02</span><span>✧</span><span>FRAME 03</span><span>✧</span><span>FRAME 04</span></div>
+
+    <section id="explore" class="explore-section">
+      <div class="container">
+        <div class="section-topline">01 / THE JOURNEY</div>
+        <div class="section-heading"><div><h2>尋影地圖</h2><p>抵達街角，讓一張沉睡的照片重新醒來。</p></div><span class="side-caption">EXPLORE THE WEST SIDE</span></div>
+        <div class="explore-panel">
+          <div class="map-column">
+            <div class="map-topbar"><div><span class="live-icon">◎</span><b>城市座標</b><small>GPS 探索模式</small></div><button class="small-outline" id="refreshGps">◎ 更新位置</button></div>
+            <div id="map" role="region" aria-label="六個歷史地點的互動地圖"><div id="mapFallback" class="map-fallback"><span>⌖</span><b>萬華．西門町</b><small>載入互動地圖中…<br>網路不通時可使用下方關卡清單</small></div></div>
+            <div class="map-foot"><span>● <span id="accuracyText">等待定位授權</span></span><span>© OpenStreetMap contributors</span></div>
+          </div>
+          <div class="status-column">
+            <div class="mission-label">YOUR FILM PASSPORT <span>▰▰▰▰</span></div>
+            <h3>你的尋影進度</h3>
+            <div class="progress-big"><span id="progressCount">00</span><span>/ 06</span></div>
+            <div class="progress-track"><div id="progressFill"></div></div>
+            <p id="progressHint">還沒開始尋影。先允許手機定位，再到地圖上的街角尋找第一張老照片。</p>
+            <div id="gpsBox" class="gps-box"><span class="gps-indicator">◌</span><div><b id="gpsText">定位尚未啟動</b><small id="gpsSub">手機使用 HTTPS 開啟，允許瀏覽器存取位置。</small></div></div>
+            <div class="action-grid"><button id="enableGps" class="dark-button">⌖ 啟用 GPS</button><button id="demoButton" class="quiet-button">▹ 展示預覽</button></div>
+            <div id="demoBanner" class="demo-banner" hidden>展示模式：可預覽照片與影片，但不計入正式遊戲。<button id="leaveDemo">退出</button></div>
+            <div class="tip">提醒：GPS 會受建築物與訊號影響。請站在人行道或安全的公共空間操作，不要為了定位走入車道。</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="stops" class="stops-section container">
+      <div class="section-topline">02 / THE ARCHIVE</div>
+      <div class="section-heading"><div><h2>六段城市影格</h2><p>每一張照片，都是曾經存在的日常。</p></div><span class="side-caption">6 HISTORICAL FRAMES</span></div>
+      <div id="cards" class="cards-grid" aria-live="polite"></div>
+    </section>
+
+    <section id="passport" class="passport-section container">
+      <div class="passport-card"><div class="passport-decoration">✦<br>✦</div><div class="passport-inner">
+        <div class="section-topline">03 / THE FINAL SCENE</div><h2>最後一幕，<br><em>回到故事的起點。</em></h2>
+        <p>收集所有歷史影格後，回到臺北市立文獻館，讓這趟城西散步有一個完美的結尾。</p>
+        <div id="completeBox" class="completion-state"><span class="completion-lock">◌</span><div><b id="completionTitle">尚未完成尋影任務</b><small id="completionDescription">還有 6 處影格等待解鎖</small></div></div>
+        <div class="passport-actions"><a id="returnDirections" href="https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E5%B8%82%E7%AB%8B%E6%96%87%E7%8D%BB%E9%A4%A8" target="_blank" rel="noopener noreferrer" class="primary-button link-button">返回文獻館 ↗</a><button class="outline-button light-outline" id="shareButton">複製成果摘要</button></div>
+        <small class="redeem-note">目前為試玩版本，僅示範完成畫面；正式領獎需要另外建置伺服器端一次性核銷，不能以截圖作為有效領獎證明。</small>
+      </div></div>
+    </section>
+  </main>
+  <footer class="footer container"><span>城西尋影 · TRACING THE LOST FRAMES</span><span>歷史影像來源：臺北市立圖書館數位典藏（素材使用仍應確認授權）</span><button id="resetButton" title="清除本機試玩記錄">重置試玩進度</button></footer>
+
+  <dialog id="detailDialog" class="media-dialog"><div class="dialog-wrap"><button class="dialog-close" id="closeDetail" aria-label="關閉">×</button><div id="dialogContent"></div></div></dialog>
+  <dialog id="helpDialog" class="help-dialog"><div class="help-wrap"><button class="dialog-close" id="closeHelp" aria-label="關閉">×</button><span class="section-topline">HOW TO PLAY</span><h2>如何開始尋影？</h2><ol><li><b>啟用定位</b>：使用手機瀏覽器開啟已部署的 HTTPS 網站，允許定位。</li><li><b>走訪地點</b>：查看地圖，前往六處歷史現場附近的安全公共區域。</li><li><b>到點解鎖</b>：當 GPS 進入設定半徑，就能打開完整老照片。</li><li><b>動態重現</b>：如果該地有 AI 影片，照片上會出現白色透明框「看動圖」。沒有影片就不顯示。</li><li><b>返回文獻館</b>：收集完所有影格，結束探索；正式核銷機制仍需製作。</li></ol><div class="help-note">注意：瀏覽器的 GPS 不是精準打卡憑證。展示模式僅供策展人檢查介面，不代表實地到訪。</div><button id="closeHelpBottom" class="dark-button">了解，開始尋影 →</button></div></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="config.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="app.js"></script>
+</body>
+</html>
